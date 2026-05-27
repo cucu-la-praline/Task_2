@@ -1,0 +1,251 @@
+[ {
+  "uid" : "4e3a7c712a34e349",
+  "name" : "Изменение данных пользователя с авторизацией",
+  "time" : {
+    "start" : 1779915240181,
+    "stop" : 1779915240301,
+    "duration" : 120
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "a7d446da3e319bf8",
+  "name" : "Изменение данных пользователя с авторизацией",
+  "time" : {
+    "start" : 1779915239683,
+    "stop" : 1779915239813,
+    "duration" : 130
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "48b7a2d327e54963",
+  "name" : "Создание уникального пользователя",
+  "time" : {
+    "start" : 1779915234720,
+    "stop" : 1779915235158,
+    "duration" : 438
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "815c5d963f2752c9",
+  "name" : "Создание заказа без ингредиентов",
+  "time" : {
+    "start" : 1779915232830,
+    "stop" : 1779915232940,
+    "duration" : 110
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "7c9d1898b2bc57c0",
+  "name" : "Изменение данных пользователя без авторизации",
+  "time" : {
+    "start" : 1779915241217,
+    "stop" : 1779915241342,
+    "duration" : 125
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "6db01eb8c94cf08f",
+  "name" : "Создание заказа с ингредиентами",
+  "time" : {
+    "start" : 1779915232700,
+    "stop" : 1779915232829,
+    "duration" : 129
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "132cec6e91738362",
+  "name" : "Логин под существующим пользователем",
+  "time" : {
+    "start" : 1779915236428,
+    "stop" : 1779915236675,
+    "duration" : 247
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "8f697b22d0a7e234",
+  "name" : "Логин с неверным логином и паролем",
+  "time" : {
+    "start" : 1779915237529,
+    "stop" : 1779915237654,
+    "duration" : 125
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "84eab9f5cb2b9a8b",
+  "name" : "Логин с неверным логином и паролем",
+  "time" : {
+    "start" : 1779915237038,
+    "stop" : 1779915237152,
+    "duration" : 114
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "32a36b8dac18b538",
+  "name" : "Логин с неверным логином и паролем",
+  "time" : {
+    "start" : 1779915238022,
+    "stop" : 1779915238150,
+    "duration" : 128
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "9dcd0f0234904162",
+  "name" : "Создание заказа с авторизацией",
+  "time" : {
+    "start" : 1779915231778,
+    "stop" : 1779915232177,
+    "duration" : 399
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "930247a263dc5fbe",
+  "name" : "Создание заказа без авторизации",
+  "time" : {
+    "start" : 1779915232441,
+    "stop" : 1779915232572,
+    "duration" : 131
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "7c9f1d3ff6344be2",
+  "name" : "Создание заказа с неверным хешем ингредиентов",
+  "time" : {
+    "start" : 1779915232942,
+    "stop" : 1779915233060,
+    "duration" : 118
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "2c1c8d332dd70977",
+  "name" : "Получение данных авторизованного пользователя",
+  "time" : {
+    "start" : 1779915238556,
+    "stop" : 1779915238689,
+    "duration" : 133
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "9a0c392e17557c4c",
+  "name" : "Создание пользователя, который уже зарегистрирован",
+  "time" : {
+    "start" : 1779915235382,
+    "stop" : 1779915235505,
+    "duration" : 123
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "f52b3e1602ec8f75",
+  "name" : "Создание пользователя без заполнения обязательных полей",
+  "time" : {
+    "start" : 1779915235644,
+    "stop" : 1779915235829,
+    "duration" : 185
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "c57eab9c3c66998f",
+  "name" : "Получение заказов авторизованного пользователя",
+  "time" : {
+    "start" : 1779915233412,
+    "stop" : 1779915233942,
+    "duration" : 530
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "f4136b7232c63e8d",
+  "name" : "Изменение данных пользователя с авторизацией",
+  "time" : {
+    "start" : 1779915240681,
+    "stop" : 1779915240816,
+    "duration" : 135
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "6d02a9432a8a0bea",
+  "name" : "Изменение данных пользователя с авторизацией",
+  "time" : {
+    "start" : 1779915239184,
+    "stop" : 1779915239316,
+    "duration" : 132
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "bf0afcbe6d03cfab",
+  "name" : "Получение данных неавторизованного пользователя",
+  "time" : {
+    "start" : 1779915238834,
+    "stop" : 1779915238955,
+    "duration" : 121
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "bc38b63db51a4e78",
+  "name" : "Создание пользователя без заполнения обязательных полей",
+  "time" : {
+    "start" : 1779915236028,
+    "stop" : 1779915236198,
+    "duration" : 170
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "7b0caf1d5672cd1e",
+  "name" : "Получение заказов неавторизованного пользователя",
+  "time" : {
+    "start" : 1779915234082,
+    "stop" : 1779915234210,
+    "duration" : 128
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "767e14e83b3618b1",
+  "name" : "Создание пользователя без заполнения обязательных полей",
+  "time" : {
+    "start" : 1779915235831,
+    "stop" : 1779915236025,
+    "duration" : 194
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "12125901eaf8a9cf",
+  "name" : "Изменение данных пользователя без авторизации",
+  "time" : {
+    "start" : 1779915241716,
+    "stop" : 1779915241845,
+    "duration" : 129
+  },
+  "status" : "passed",
+  "severity" : "normal"
+}, {
+  "uid" : "967b151df12ad201",
+  "name" : "Получение заказов пользователя с пустым списком",
+  "time" : {
+    "start" : 1779915234430,
+    "stop" : 1779915234584,
+    "duration" : 154
+  },
+  "status" : "passed",
+  "severity" : "normal"
+} ]

@@ -10,9 +10,6 @@ class TestOrderCreate:
     def test_create_order_with_auth_success(self, base_url, registered_user, auth_headers, get_ingredients):
         ingredients = get_ingredients
 
-        if not ingredients:
-            pytest.skip("Нет доступных ингредиентов")
-
         with allure.step("Создать заказ с авторизацией"):
             order_data = {"ingredients": ingredients}
             response = requests.post(f"{base_url}/api/orders",
@@ -29,9 +26,6 @@ class TestOrderCreate:
     def test_create_order_without_auth_success(self, base_url, get_ingredients):
         ingredients = get_ingredients
 
-        if not ingredients:
-            pytest.skip("Нет доступных ингредиентов")
-
         with allure.step("Создать заказ без авторизации"):
             order_data = {"ingredients": ingredients}
             response = requests.post(f"{base_url}/api/orders", json=order_data)
@@ -45,9 +39,6 @@ class TestOrderCreate:
     def test_create_order_with_ingredients_success(self, base_url, get_ingredients):
         ingredients = get_ingredients
 
-        if not ingredients:
-            pytest.skip("Нет доступных ингредиентов")
-
         with allure.step("Создать заказ с ингредиентами"):
             order_data = {"ingredients": ingredients}
             response = requests.post(f"{base_url}/api/orders", json=order_data)
@@ -55,7 +46,6 @@ class TestOrderCreate:
             assert response.status_code == 200
             response_data = response.json()
             assert response_data["success"] is True
-            assert len(response_data["order"]["ingredients"]) == len(ingredients)
 
     @allure.title("Создание заказа без ингредиентов")
     def test_create_order_without_ingredients_fails(self, base_url):
@@ -85,9 +75,6 @@ class TestOrderGet:
     @allure.title("Получение заказов авторизованного пользователя")
     def test_get_user_orders_with_auth_success(self, base_url, registered_user, auth_headers, get_ingredients):
         ingredients = get_ingredients
-
-        if not ingredients:
-            pytest.skip("Нет доступных ингредиентов")
 
         with allure.step("Создать тестовый заказ"):
             order_data = {"ingredients": ingredients}

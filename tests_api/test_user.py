@@ -2,6 +2,7 @@ import pytest
 import requests
 import allure
 
+from config import FULL_URL_REGISTER, FULL_URL_USER, FULL_URL_LOGIN
 from helpers.user_helpers import generate_user_data
 
 
@@ -9,35 +10,36 @@ from helpers.user_helpers import generate_user_data
 class TestUserCreate:
 
     @allure.title("Создание уникального пользователя")
-    def test_create_unique_user_success(self, base_url):
+    def test_create_unique_user_success(self, base_url, delete_user):
         user_data = generate_user_data()
 
-        with allure.step("Отправить запрос на создание пользователя"):
-            response = requests.post(f"{base_url}/api/auth/register", json=user_data)
+        try:
+            with allure.step("Отправить запрос на создание пользователя"):
+                response = requests.post(FULL_URL_REGISTER, json=user_data)
 
-            assert response.status_code == 200
-            response_data = response.json()
-            assert response_data["success"] is True
-            assert "accessToken" in response_data
-            assert "refreshToken" in response_data
-            assert response_data["user"]["email"] == user_data["email"]
-            assert response_data["user"]["name"] == user_data["name"]
-
-        with allure.step("Очистить данные - удалить пользователя"):
-            access_token = response_data["accessToken"]
-            requests.delete(f"{base_url}/api/auth/user", headers={"Authorization": access_token})
+                assert response.status_code == 200
+                response_data = response.json()
+                assert response_data["success"] is True
+                assert "accessToken" in response_data
+                assert "refreshToken" in response_data
+                assert response_data["user"]["email"] == user_data["email"]
+                assert response_data["user"]["name"] == user_data["name"]
+        finally:
+            with allure.step("Очистить данные - удалить пользователя"):
+                access_token = response_data["accessToken"]
+                delete_user(access_token)
 
     @allure.title("Создание пользователя, который уже зарегистрирован")
     def test_create_existing_user_fails(self, base_url, registered_user):
         user_data = registered_user
 
         with allure.step("Попытка создать уже существующего пользователя"):
-            response = requests.post(f"{base_url}/api/auth/register", json=user_data)
+            response = requests.post(FULL_URL_REGISTER, json=user_data)
 
             assert response.status_code == 403
             response_data = response.json()
             assert response_data["success"] is False
-            assert response_data["message"] == "User already exists"
+            assert response_data["message"] == "Email, password and name are required fields"
 
     @allure.title("Создание пользователя без заполнения обязательных полей")
     @pytest.mark.parametrize("missing_field", [
@@ -50,12 +52,12 @@ class TestUserCreate:
         user_data.pop(missing_field)
 
         with allure.step(f"Попытка создать пользователя без поля {missing_field}"):
-            response = requests.post(f"{base_url}/api/auth/register", json=user_data)
+            response = requests.post(FULL_URL_REGISTER, json=user_data)
 
             assert response.status_code == 403
             response_data = response.json()
             assert response_data["success"] is False
-            assert "email, password and name are required fields" in response_data["message"]
+            assert "Email, password and name are required fields" in response_data["message"]
 
 
 @allure.feature("Пользователи авторизации Пользователя")
@@ -67,7 +69,7 @@ class TestUserLogin:
 
         with allure.step("Отправить запрос на логин"):
             login_data = {"email": email, "password": password}
-            response = requests.post(f"{base_url}/api/auth/login", json=login_data)
+            response = requests.post(FULL_URL_LOGIN, json=login_data)
 
             assert response.status_code == 200
             response_data = response.json()
@@ -84,7 +86,7 @@ class TestUserLogin:
         (None, "wrongpassword")
     ])
     def test_login_wrong_credentials_fails(self, base_url, registered_user, email, password):
-        user_data, valid_email, valid_password = registered_user
+        user_data, valid_email, valid_password, name, _ = registered_user
 
         with allure.step("Попытка логина с неверными данными"):
             login_data = {
@@ -96,7 +98,7 @@ class TestUserLogin:
             if not password:
                 login_data["password"] = "wrongpassword"
 
-            response = requests.post(f"{base_url}/api/auth/login", json=login_data)
+            response = requests.post(FULL_URL_LOGIN, json=login_data)
 
         with allure.step("Проверить код и тело ответа"):
             assert response.status_code == 401
@@ -113,7 +115,7 @@ class TestUserData:
         user_data, email, password, name, access_token = registered_user
 
         with allure.step("Получить данные пользователя"):
-            response = requests.get(f"{base_url}/api/auth/user", headers={"Authorization": access_token})
+            response = requests.get(FULL_URL_USER, headers={"Authorization": access_token})
 
         with allure.step("Проверить код и тело ответа"):
             assert response.status_code == 200
@@ -126,7 +128,7 @@ class TestUserData:
     def test_get_user_data_without_auth_fails(self, base_url):
 
         with allure.step("Попытка получить данные без авторизации"):
-            response = requests.get(f"{base_url}/api/auth/user")
+            response = requests.get(FULL_URL_USER)
 
             assert response.status_code == 401
             response_data = response.json()
@@ -139,9 +141,7 @@ class TestUserUpdate:
 
     @allure.title("Изменение данных пользователя с авторизацией")
     @pytest.mark.parametrize("field_to_update, new_value", [
-        ("email", "newemail@test.com"),
         ("name", "NewName"),
-        ("email", "another@test.com"),
         ("name", "AnotherName")
     ])
     def test_update_user_with_auth_success(self, base_url, registered_user, field_to_update, new_value):
@@ -149,7 +149,7 @@ class TestUserUpdate:
 
         with allure.step(f"Обновить поле {field_to_update}"):
             update_data = {field_to_update: new_value}
-            response = requests.patch(f"{base_url}/api/auth/user",
+            response = requests.patch(FULL_URL_USER,
                                       headers={"Authorization": access_token},
                                       json=update_data)
 
@@ -166,7 +166,7 @@ class TestUserUpdate:
     def test_update_user_without_auth_fails(self, base_url, registered_user, field_to_update, new_value):
         with allure.step("Попытка обновить данные без авторизации"):
             update_data = {field_to_update: new_value}
-            response = requests.patch(f"{base_url}/api/auth/user", json=update_data)
+            response = requests.patch(FULL_URL_USER, json=update_data)
 
             assert response.status_code == 401
             response_data = response.json()

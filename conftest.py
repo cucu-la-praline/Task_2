@@ -3,13 +3,15 @@ import requests
 
 from faker import Faker
 
+from config import BASE_URL, FULL_URL_REGISTER, FULL_URL_USER
+
 fake = Faker()
 
 
 @pytest.fixture
 def base_url():
     """Базовый URL API"""
-    return "https://stellarburgers.nomoreparties.site"
+    return BASE_URL
 
 
 @pytest.fixture
@@ -35,23 +37,24 @@ def create_unique_user():
 def registered_user(base_url, create_unique_user):
     """Фикстура создания и удаления зарегистрированного пользователя"""
     user_data, email, password, name = create_unique_user()
+    access_token = None
 
-    url = f"{base_url}/api/auth/register"
-    response = requests.post(url=url, json=user_data)
-    access_token = response.json().get("accessToken")
+    try:
+        response = requests.post(FULL_URL_REGISTER, json=user_data)
+        access_token = response.json().get("accessToken")
 
-    yield user_data, email, password, name, access_token
+        yield user_data, email, password, name, access_token
 
-    # Удаление пользователя после теста
-    if access_token:
-        url = f"{base_url}/api/auth/user"
-        requests.delete(url=url, headers={"Authorization": access_token})
+    finally:
+        if access_token:
+            headers = {"Authorization": access_token}
+            requests.delete(FULL_URL_USER, headers=headers)
 
 
 @pytest.fixture
 def auth_headers(registered_user):
     """Фикстура для получения заголовков с авторизацией"""
-    access_token = registered_user
+    user_data, email, password, name, access_token = registered_user
     return {"Authorization": access_token}
 
 
@@ -61,8 +64,22 @@ def get_ingredients(base_url):
     url = f"{base_url}/api/ingredients"
     response = requests.get(url=url)
 
-    if response.status_code == 200:
-        ingredients = response.json().get("data", [])
-        if ingredients:
-            return [ingredient["_id"] for ingredient in ingredients[:3]]
-    return []
+    ingredients = response.json().get("data", [])
+    return [ingredient["_id"] for ingredient in ingredients[:3]]
+
+
+@pytest.fixture
+def delete_user():
+    """
+    Фикстура для удаления пользователя.
+    """
+
+    def _delete_user(access_token):
+        """Удалить пользователя по токену"""
+        if access_token:
+            headers = {"Authorization": access_token}
+            response = requests.delete(FULL_URL_USER, headers=headers)
+            return response.status_code == 202
+        return False
+
+    return _delete_user

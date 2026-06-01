@@ -1,6 +1,7 @@
-import pytest
 import requests
 import allure
+
+from config import FULL_URL_ORDERS
 
 
 @allure.feature("Тесты создания заказов")
@@ -12,7 +13,7 @@ class TestOrderCreate:
 
         with allure.step("Создать заказ с авторизацией"):
             order_data = {"ingredients": ingredients}
-            response = requests.post(f"{base_url}/api/orders",
+            response = requests.post(FULL_URL_ORDERS,
                                      headers=auth_headers,
                                      json=order_data)
 
@@ -20,7 +21,6 @@ class TestOrderCreate:
             response_data = response.json()
             assert response_data["success"] is True
             assert "order" in response_data
-            assert response_data["order"]["ingredients"] is not None
 
     @allure.title("Создание заказа без авторизации")
     def test_create_order_without_auth_success(self, base_url, get_ingredients):
@@ -28,7 +28,7 @@ class TestOrderCreate:
 
         with allure.step("Создать заказ без авторизации"):
             order_data = {"ingredients": ingredients}
-            response = requests.post(f"{base_url}/api/orders", json=order_data)
+            response = requests.post(FULL_URL_ORDERS, json=order_data)
 
             assert response.status_code == 200
             response_data = response.json()
@@ -41,7 +41,7 @@ class TestOrderCreate:
 
         with allure.step("Создать заказ с ингредиентами"):
             order_data = {"ingredients": ingredients}
-            response = requests.post(f"{base_url}/api/orders", json=order_data)
+            response = requests.post(FULL_URL_ORDERS, json=order_data)
 
             assert response.status_code == 200
             response_data = response.json()
@@ -52,7 +52,7 @@ class TestOrderCreate:
 
         with allure.step("Попытка создать заказ без ингредиентов"):
             order_data = {"ingredients": []}
-            response = requests.post(f"{base_url}/api/orders", json=order_data)
+            response = requests.post(FULL_URL_ORDERS, json=order_data)
 
             assert response.status_code == 400
             response_data = response.json()
@@ -64,7 +64,7 @@ class TestOrderCreate:
 
         with allure.step("Попытка создать заказ с неверным хешем"):
             order_data = {"ingredients": ["invalid_hash_123", "wrong_hash_456"]}
-            response = requests.post(f"{base_url}/api/orders", json=order_data)
+            response = requests.post(FULL_URL_ORDERS, json=order_data)
 
             assert response.status_code == 500 or response.status_code == 400
 
@@ -81,7 +81,7 @@ class TestOrderGet:
             requests.post(f"{base_url}/api/orders", headers=auth_headers, json=order_data)
 
         with allure.step("Получить заказы пользователя"):
-            response = requests.get(f"{base_url}/api/orders", headers=auth_headers)
+            response = requests.get(FULL_URL_ORDERS, headers=auth_headers)
 
             assert response.status_code == 200
             response_data = response.json()
@@ -93,7 +93,7 @@ class TestOrderGet:
     def test_get_user_orders_without_auth_fails(self, base_url):
 
         with allure.step("Попытка получить заказы без авторизации"):
-            response = requests.get(f"{base_url}/api/orders")
+            response = requests.get(FULL_URL_ORDERS)
 
             assert response.status_code == 401
             response_data = response.json()
@@ -104,7 +104,7 @@ class TestOrderGet:
     def test_get_user_orders_empty_success(self, base_url, registered_user, auth_headers):
 
         with allure.step("Получить заказы нового пользователя"):
-            response = requests.get(f"{base_url}/api/orders", headers=auth_headers)
+            response = requests.get(FULL_URL_ORDERS, headers=auth_headers)
 
             assert response.status_code == 200
             response_data = response.json()

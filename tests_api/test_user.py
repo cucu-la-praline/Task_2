@@ -79,25 +79,26 @@ class TestUserLogin:
             assert response_data["user"]["email"] == email
             assert response_data["user"]["name"] == name
 
-    @allure.title("Логин с неверным логином и паролем")
-    @pytest.mark.parametrize("email, password", [
-        ("wrong@email.com", "wrongpassword"),
-        ("wrong@email.com", None),
-        (None, "wrongpassword")
-    ])
-    def test_login_wrong_credentials_fails(self, base_url, registered_user, email, password):
-        user_data, valid_email, valid_password, name, _ = registered_user
+    @allure.title("Логин с неверным email")
+    def test_login_wrong_email_fails(self, urls, registered_user):
+        """Проверка: неверный email → ошибка 401"""
+        user_data, valid_email, password, name, _ = registered_user
 
+        with allure.step("Попытка логина с неверным email"):
+            login_data = {"email": "wrong@email.com", "password": password}
+            response = requests.post(FULL_URL_LOGIN, json=login_data)
+
+        with allure.step("Проверить код и тело ответа"):
+            assert response.status_code == 401
+            response_data = response.json()
+            assert response_data["success"] is False
+            assert response_data["message"] == "email or password are incorrect"
+
+    @allure.title("Логин с неверным email и паролем")
+    def test_login_wrong_email_and_password_fails(self, urls):
+        """Проверка: неверный email и неверный пароль → ошибка 401"""
         with allure.step("Попытка логина с неверными данными"):
-            login_data = {
-                "email": email if email else valid_email,
-                "password": password if password else valid_password + "wrong"
-            }
-            if not email:
-                login_data["email"] = "wrong@email.com"
-            if not password:
-                login_data["password"] = "wrongpassword"
-
+            login_data = {"email": "wrong@email.com", "password": "wrongpassword"}
             response = requests.post(FULL_URL_LOGIN, json=login_data)
 
         with allure.step("Проверить код и тело ответа"):

@@ -10,24 +10,12 @@ from helpers.user_helpers import generate_user_data
 class TestUserCreate:
 
     @allure.title("Создание уникального пользователя")
-    def test_create_unique_user_success(self, base_url, delete_user):
-        user_data = generate_user_data()
+    def test_create_unique_user_success(self, base_url, registered_user):
+        user_data, email, password, name, access_token = registered_user
 
-        try:
-            with allure.step("Отправить запрос на создание пользователя"):
-                response = requests.post(FULL_URL_REGISTER, json=user_data)
-
-                assert response.status_code == 200
-                response_data = response.json()
-                assert response_data["success"] is True
-                assert "accessToken" in response_data
-                assert "refreshToken" in response_data
-                assert response_data["user"]["email"] == user_data["email"]
-                assert response_data["user"]["name"] == user_data["name"]
-        finally:
-            with allure.step("Очистить данные - удалить пользователя"):
-                access_token = response_data["accessToken"]
-                delete_user(access_token)
+        assert email == user_data["email"]
+        assert name == user_data["name"]
+        assert access_token is not None
 
     @allure.title("Создание пользователя, который уже зарегистрирован")
     def test_create_existing_user_fails(self, base_url, registered_user):

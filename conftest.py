@@ -37,18 +37,15 @@ def create_unique_user():
 def registered_user(base_url, create_unique_user):
     """Фикстура создания и удаления зарегистрированного пользователя"""
     user_data, email, password, name = create_unique_user()
-    access_token = None
 
-    try:
-        response = requests.post(FULL_URL_REGISTER, json=user_data)
-        access_token = response.json().get("accessToken")
+    response = requests.post(FULL_URL_REGISTER, json=user_data)
+    access_token = response.json().get("accessToken")
 
-        yield user_data, email, password, name, access_token
+    yield user_data, email, password, name, access_token
 
-    finally:
-        if access_token:
-            headers = {"Authorization": access_token}
-            requests.delete(FULL_URL_USER, headers=headers)
+    if access_token:
+        headers = {"Authorization": access_token}
+        requests.delete(FULL_URL_USER, headers=headers)
 
 
 @pytest.fixture

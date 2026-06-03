@@ -68,15 +68,15 @@ def get_ingredients(base_url):
 @pytest.fixture
 def delete_user():
     """
-    Фикстура для удаления пользователя.
+    Фикстура для удаления пользователей после теста.
+    Сохраняет токены созданных пользователей.
     """
+    tokens_to_delete = []
 
-    def _delete_user(access_token):
-        """Удалить пользователя по токену"""
-        if access_token:
-            headers = {"Authorization": access_token}
-            response = requests.delete(FULL_URL_USER, headers=headers)
-            return response.status_code == 202
-        return False
+    yield tokens_to_delete
 
-    return _delete_user
+    # Удаляем всех пользователей после теста
+    for token in tokens_to_delete:
+        if token:
+            headers = {"Authorization": token}
+            requests.delete(FULL_URL_USER, headers=headers)
